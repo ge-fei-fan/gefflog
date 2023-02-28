@@ -15,12 +15,12 @@ const (
 	ERROR = 8
 )
 
-// var Logger *zap.SugaredLogger
+var sugarLogger *zap.SugaredLogger
 var encoder zapcore.Encoder
 var logsDir = "./logs"
 var logsLevel = byte(INFO | ERROR)
 
-func InitLogger(level byte) *zap.SugaredLogger {
+func InitLogger(level byte) {
 	//Encoder:设置编码器
 	getEncoder()
 	logsLevel = level
@@ -46,7 +46,7 @@ func InitLogger(level byte) *zap.SugaredLogger {
 
 	core := zapcore.NewTee(allcore...)
 	logger := zap.New(core, zap.AddCaller())
-	return logger.Sugar()
+	sugarLogger = logger.Sugar()
 }
 
 // core
@@ -120,4 +120,21 @@ func getLogWriter(lel zapcore.Level) zapcore.WriteSyncer {
 		Compress:   false,
 	}
 	return zapcore.AddSync(lumberJackLogger)
+}
+
+func Debug(val ...interface{}) {
+	sugarLogger.Debug(val)
+	sugarLogger.Sync()
+}
+func Info(val ...interface{}) {
+	sugarLogger.Info(val)
+	sugarLogger.Sync()
+}
+func Warn(val ...interface{}) {
+	sugarLogger.Warn(val)
+	sugarLogger.Sync()
+}
+func Err(val ...interface{}) {
+	sugarLogger.Error(val)
+	sugarLogger.Sync()
 }
