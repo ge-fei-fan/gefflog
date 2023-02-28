@@ -1,4 +1,4 @@
-module gefflog
+module github.com/ge-fei-fan/gefflog
 
 go 1.19
 
