@@ -49,6 +49,7 @@ func InitLogger(level byte) {
 	sugarLogger = logger.Sugar()
 }
 
+// core
 func initCore(level zapcore.Level) zapcore.Core {
 	consoleDebugging := zapcore.Lock(os.Stdout)
 	consoleErrors := zapcore.Lock(os.Stderr)
