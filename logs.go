@@ -45,11 +45,10 @@ func InitLogger(level byte) {
 	}
 
 	core := zapcore.NewTee(allcore...)
-	logger := zap.New(core, zap.AddCaller())
+	logger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
 	sugarLogger = logger.Sugar()
 }
 
-// core
 func initCore(level zapcore.Level) zapcore.Core {
 	consoleDebugging := zapcore.Lock(os.Stdout)
 	consoleErrors := zapcore.Lock(os.Stderr)
