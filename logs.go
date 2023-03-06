@@ -20,7 +20,33 @@ var encoder zapcore.Encoder
 var logsDir = "./logs"
 var logsLevel = byte(INFO | ERROR)
 
-func InitLogger(level byte) {
+func init() {
+	getEncoder()
+
+	var debugcore, infocore, warncore, errorcore zapcore.Core
+	var allcore []zapcore.Core
+	if (logsLevel & DEBUG) != 0 {
+		debugcore = initCore(zapcore.DebugLevel)
+		allcore = append(allcore, debugcore)
+	}
+	if (logsLevel & INFO) != 0 {
+		infocore = initCore(zapcore.InfoLevel)
+		allcore = append(allcore, infocore)
+	}
+	if (logsLevel & WARN) != 0 {
+		warncore = initCore(zapcore.WarnLevel)
+		allcore = append(allcore, warncore)
+	}
+	if (logsLevel & ERROR) != 0 {
+		errorcore = initCore(zapcore.ErrorLevel)
+		allcore = append(allcore, errorcore)
+	}
+
+	core := zapcore.NewTee(allcore...)
+	logger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
+	sugarLogger = logger.Sugar()
+}
+func ChangeLogger(level byte) {
 	//Encoder:设置编码器
 	getEncoder()
 	logsLevel = level
