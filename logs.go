@@ -46,10 +46,15 @@ func init() {
 	logger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
 	sugarLogger = logger.Sugar()
 }
-func ChangeLogger(level byte) {
+func ChangeLogger(level byte, path string) {
 	//Encoder:设置编码器
+	if level != 0 {
+		logsLevel = level
+	}
+	if path != "" {
+		logsDir = path
+	}
 	getEncoder()
-	logsLevel = level
 
 	var debugcore, infocore, warncore, errorcore zapcore.Core
 	var allcore []zapcore.Core
